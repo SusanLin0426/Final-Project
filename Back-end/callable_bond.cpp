@@ -119,17 +119,6 @@ int main() {
 
     Server svr;
 
-    // svr.set_pre_routing_handler([](const Request &req, Response &res) {
-    //     res.set_header("Access-Control-Allow-Origin", "*");
-    //     res.set_header("Access-Control-Allow-Headers", "Content-Type");
-    //     if (req.method == "OPTIONS") {
-    //         res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    //         res.status = 200;
-    //         return HandlerResponse::Handled;
-    //     }
-    //     return HandlerResponse::Unhandled;
-    // });
-
     svr.Options("/.*", [](const Request &req, Response &res) {
         setup_cors_headers(res);
         res.status = 200; // No content
@@ -146,12 +135,10 @@ int main() {
         double d = params["d"];
         int n = params["n"];
         double q = params["q"];
-
+        
         // for callable bond price
-        // int first_call_time = params["first_call_time"];
-        // double call_price = params["call_price"];
         int first_call_time = 6;
-        double call_price = 106;
+        double call_price = params["call_price"];
 
         vector<vector<double>> tree = interest_rate_trees_gbm_build(r0, u, d, n);
 
