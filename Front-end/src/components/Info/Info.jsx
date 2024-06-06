@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Info = ({ straight_bond_price, callable_bond_price, r0, u, d, n, q, id, deleteCard }) => {
+const Info = ({ straight_bond_price, callable_bond_price, r0, u, d, n, q, c, id, deleteCard }) => {
   const handleDelete = () => {
     deleteCard(id);
   };
@@ -22,6 +22,7 @@ const Info = ({ straight_bond_price, callable_bond_price, r0, u, d, n, q, id, de
             <span data-test="d">d: {d} </span>
             <span data-test="n">n: {n} </span>
             <span data-test="q">q: {q} </span>
+            <span data-test="c">c: {c} </span>
 
           </div>
 
@@ -40,6 +41,7 @@ Info.propTypes = {
   d: PropTypes.string,
   n: PropTypes.string,
   q: PropTypes.string,
+  c: PropTypes.string,
 
   straight_bond_price: PropTypes.string,
   callable_bond_price: PropTypes.string

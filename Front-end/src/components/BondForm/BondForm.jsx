@@ -7,7 +7,8 @@ const initialValues = {
     u: '',
     d: '',
     n: '',
-    q: ''
+    q: '',
+	c: ''
 }
 
 const BondForm = ({ change }) => {
@@ -66,7 +67,7 @@ const BondForm = ({ change }) => {
 
 
 				<div className="center col s2">
-					<label htmlFor="d">d </label>
+					<label htmlFor="d"> d </label>
 					<input
 						id="d"
 						name="d"
@@ -95,7 +96,7 @@ const BondForm = ({ change }) => {
 				</div>
 
 				<div className="center col s2">
-					<label htmlFor="q">q </label>
+					<label htmlFor="q"> q </label>
 					<input
 						id="q"
 						name="q"
@@ -109,13 +110,29 @@ const BondForm = ({ change }) => {
 					/>
 				</div>
 
+				<div className="center col s2">
+					<label htmlFor="c"> Call Price </label>
+					<input
+						id="c"
+						name="c"
+						type="number"
+						min="0"
+						max="999"
+						step="1"
+						placeholder="106"
+						value={state.c}
+						onChange={handleChange}
+					/>
+				</div>
+
+
 			</div>
 			<div className="center">
 				<button
 					id="bond-btn"
 					className="calculate-btn"
 					type="button"
-					disabled={state.r0 === '' || state.u === '' || state.d === '' || state.n === '' || state.q === ''}
+					disabled={state.r0 === '' || state.u === '' || state.d === '' || state.n === '' || state.q === '' || state.c === ''}
 					onClick={handleSubmit}
 				>
 					Calculate Bond Price

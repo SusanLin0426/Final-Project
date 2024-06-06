@@ -20,11 +20,12 @@ const App = () => {
     const d = state.map(obj => obj.d);
     const n = state.map(obj => obj.n);
     const q = state.map(obj => obj.q);
+    const c = state.map(obj => obj.c);
 
     const straight_bond_price = state.map(obj => obj.straight_bond_price);
     const callable_bond_price = state.map(obj => obj.callable_bond_price);
 
-    let newData = { r0, u, d, n, q, straight_bond_price, callable_bond_price };
+    let newData = { r0, u, d, n, q, c, straight_bond_price, callable_bond_price };
     setData(newData);
   }, [state]);
 
@@ -34,9 +35,10 @@ const App = () => {
     let d = parseFloat(val.d);
     let n = parseInt(val.n);
     let q = parseFloat(val.q);
-  
+    let c = parseFloat(val.c);
+
     axios.post('http://localhost:3001/calculate', {
-      r0, u, d, n, q
+      r0, u, d, n, q, c
     })
       .then(response => { 
       setState(prevState => {
@@ -45,6 +47,7 @@ const App = () => {
             val.d = d;
             val.n = n;
             val.q = q;
+            val.c = c;
 
             val.straight_bond_price = response.data.straight_bond_price;
             val.callable_bond_price = response.data.callable_bond_price;
@@ -96,6 +99,7 @@ const App = () => {
                       d={info.d}
                       n={info.n}
                       q={info.q}
+                      c={info.c}
 
                       // date={info.date}
                       straight_bond_price={info.straight_bond_price}
