@@ -1,0 +1,2 @@
+/home/frisk/Final-Project/Back-end/CMakeFiles/edit_cache.dir
+/home/frisk/Final-Project/Back-end/CMakeFiles/rebuild_cache.dir
