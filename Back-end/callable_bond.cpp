@@ -80,35 +80,7 @@ double interest_rate_trees_gbm_value_of_callable_bond(const vector<double>& cflo
     return values[0][0];
 }
 
-// int main() {
-
-//     Server svr;
-
-//     // input: r0, u, d, n, q
-//     double r0 = 0.06;
-//     double u = 1.2;
-//     double d = 0.9;
-//     int n = 10;
-//     double q = 0.5;
-
-//     vector<vector<double> > tree = interest_rate_trees_gbm_build(r0, u, d, n);
-
-//     vector<double> cashflows;
-//     cashflows.push_back(0);
-//     for (int t = 1; t <= 9; ++t) {
-//         cashflows.push_back(6);
-//     }
-//     cashflows.push_back(106);
-
-//     int first_call_time = 6;
-//     double call_price = 106;
-
-//     cout << "Straight bond price = " << interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q) << endl;
-//     cout << "Callable bond price = " << interest_rate_trees_gbm_value_of_callable_bond(cashflows, tree, q, first_call_time, call_price) << endl;
-
-//     return 0;
-// }
-
+// CORS headers
 void setup_cors_headers(Response &res) {
     res.set_header("Access-Control-Allow-Origin", "*");
     res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
