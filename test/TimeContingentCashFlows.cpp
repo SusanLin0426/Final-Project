@@ -45,20 +45,20 @@ double price_european_call_option_on_bond_using_ho_lee(TermStructure* initial,
         const auto& row = hl_tree[i];
         for (size_t j = 0; j < row.size(); ++j) { // statue j
             const auto& node = row[j];
-            std::cout << "Discount factor at row " << i << " node " << j << " is " << node.d(1.0) << std::endl;
+            //std::cout << "Discount factor at row " << i << " node " << j << " is " << node.d(1.0) << std::endl;
         }
     }
     
 
     // Print vec_cf and T for debugging
-    std::cout << "T: " << T << std::endl;
-    std::cout << "vec_cf:" << std::endl;
+    //std::cout << "T: " << T << std::endl;
+    //std::cout << "vec_cf:" << std::endl;
     for (const auto& cf : vec_cf) {
         cf.print();
     }
 
-    std::cout << "vec_cf.sizez():" << vec_cf.size() << std::endl;
-    std::cout << "underlying_bond_cflows.sizez():" << underlying_bond_cflows.size() << std::endl;
+    //std::cout << "vec_cf.sizez():" << vec_cf.size() << std::endl;
+    //std::cout << "underlying_bond_cflows.sizez():" << underlying_bond_cflows.size() << std::endl;
 
     // Ensure T + 1 is within bounds
     if (T + 1 >= vec_cf.size()) {
@@ -69,7 +69,7 @@ double price_european_call_option_on_bond_using_ho_lee(TermStructure* initial,
     std::vector<double> values(T + 1, 0.0);
     for (int i = 0; i <= T; ++i) {
         values[i] = std::max(0.0, bonds_price(vec_cf[T + 1].times, vec_cf[T + 1].cash_flows, hl_tree[T][i]) - K); // HL: T + 1 ? 
-        std::cout << "check i :" << i << std::endl;
+        //std::cout << "check i :" << i << std::endl;
     }
 
     for (int t = T - 1; t >= 0; --t) {
