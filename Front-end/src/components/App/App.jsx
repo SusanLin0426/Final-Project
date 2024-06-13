@@ -25,12 +25,12 @@ const App = () => {
     const day_count_convention = state.map(obj => obj.day_count_convention);
 
     /* -- Zero Coupon Bond Term Structure -- */
-    const time_to_maturity = state.map(obj => obj.time_to_maturity);
-    const price = state.map(obj => obj.price);
+    // const time_to_maturity = state.map(obj => obj.time_to_maturity);
+    // const price = state.map(obj => obj.price);
 
     const callable_bond_price = state.map(obj => obj.callable_bond_price);
 
-    let newData = { k, maturity_date, delta, pi, coupon_rate, face_value, day_count_convention, time_to_maturity, price, callable_bond_price};
+    let newData = { k, maturity_date, delta, pi, coupon_rate, face_value, day_count_convention, callable_bond_price};
     setData(newData);
   }, [state]);
 
@@ -47,10 +47,8 @@ const App = () => {
     let day_count_convention = val.day_count_convention;
 
     /* -- Zero Coupon Bond Term Structure -- */
-    let time_to_maturity = parseFloat(val.time_to_maturity);
-    let price = parseFloat(val.price);
-
-    let callable_bond_price = parseFloat(val.callable_bond_price);
+    // let time_to_maturity = parseFloat(val.time_to_maturity);
+    // let price = parseFloat(val.price);
   
     axios.post('http://localhost:3001/calculate', {
       k, 
@@ -59,9 +57,9 @@ const App = () => {
       pi, 
       coupon_rate, 
       face_value, 
-      day_count_convention, 
-      time_to_maturity, 
-      price
+      day_count_convention
+      // time_to_maturity, 
+      // price
     })
       .then(response => { 
       setState(prevState => {
@@ -77,8 +75,8 @@ const App = () => {
             val.day_count_convention = day_count_convention;
 
             /* -- Zero Coupon Bond Term Structure -- */
-            val.time_to_maturity = time_to_maturity;
-            val.price = price;
+            // val., [](const Request& req, Response& res) { = time_to_maturity;
+            // val.price = price;
 
             val.callable_bond_price = response.data.callable_bond_price;
 
@@ -159,10 +157,11 @@ const App = () => {
                       day_count_convention={info.day_count_convention}
 
                       /* -- Zero Coupon Bond Term Structure -- */
-                      time_to_maturity={info.time_to_maturity}
-                      price={info.price}
+                      // time_to_maturity={info.time_to_maturity}
+                      // price={info.price}
 
                       callable_bond_price={info.callable_bond_price}
+                      
                       deleteCard={handleDelete}
                     />
                   ))}

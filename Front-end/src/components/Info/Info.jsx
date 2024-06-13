@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Info = ({callable_bond_price, r0, u, d, n, q, call_price, id, deleteCard}) => {
+const Info = ({callable_bond_price, k, maturity_date, delta, pi, coupon_rate, face_value, day_count_convention, u, d, n, q, call_price, id, deleteCard}) => {
   const handleDelete = () => {
     deleteCard(id);
   };
@@ -14,12 +14,14 @@ const Info = ({callable_bond_price, r0, u, d, n, q, call_price, id, deleteCard})
           Callable bond price: {callable_bond_price}
           </span>
           <div className="card-data">
-            <span data-test="r0">r0: {r0} </span>
-            <span data-test="u">u: {u} </span>
-            <span data-test="d">d: {d} </span>
-            <span data-test="n">n: {n} </span>
-            <span data-test="q">q: {q} </span>
-            <span data-test="call_price">call_price: {call_price} </span>
+            <span data-test="k">Strike Price: {k} </span>
+            <span data-test="maturity_date"> Maturity Date: {maturity_date} </span>
+            <span data-test="delta"> Delta: {delta} </span>
+            <span data-test="pi"> Pi: {pi} </span>
+
+            <span data-test="coupon_rate"> Coupon Rate: {coupon_rate} </span>
+            <span data-test="face_value"> Face Value: {face_value} </span>
+            <span data-test="day_count_convention"> Day Count Convention: {day_count_convention} </span>
           </div>
 
           <button className="delete-btn" onClick={handleDelete}>
@@ -32,13 +34,13 @@ const Info = ({callable_bond_price, r0, u, d, n, q, call_price, id, deleteCard})
 };
 
 Info.propTypes = {
-  r0: PropTypes.string,
-  u: PropTypes.string,
-  d: PropTypes.string,
-  n: PropTypes.string,
-  q: PropTypes.string,
-  call_price: PropTypes.string,
-
+  k: PropTypes.string, 
+  maturity_date: PropTypes.string, 
+  delta: PropTypes.string, 
+  pi: PropTypes.string, 
+  coupon_rate: PropTypes.string, 
+  face_value: PropTypes.string, 
+  day_count_convention: PropTypes.string,
   callable_bond_price: PropTypes.string
 };
 

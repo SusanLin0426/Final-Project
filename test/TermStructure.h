@@ -1,4 +1,3 @@
-// TermSructure.h
 #ifndef TERM_STRUCTURE_H
 #define TERM_STRUCTURE_H
 
@@ -25,7 +24,7 @@ public:
     };
 
     virtual double r(const double& t) const = 0; // yield on zero coupon bond
-    virtual double d(const double& t) const = 0; // discount factor/price of zero coupon bond    //// !!!!!!!!! override 
+    virtual double d(const double& t) const = 0; // discount factor/price of zero coupon bond
     virtual double f(const double& t1, const double& t2) const = 0; // forward rate
     virtual ~TermStructure() {};
 
@@ -36,7 +35,6 @@ public:
     static double nelsonSiegelSpotRate(double t, const NelsonSiegelParams& params);
     static double nelsonSiegelDiscountFactor(double t, const NelsonSiegelParams& params);
     static std::vector<double> bootstrapYieldCurve(const std::vector<Bond>& bonds);
-
 };
 
 class TermStructureFlat : public TermStructure {
@@ -46,7 +44,7 @@ public:
     TermStructureFlat(const double& r);
     virtual ~TermStructureFlat();
     virtual double r(const double& t) const override;
-    virtual double d(const double& t) const override;         
+    virtual double d(const double& t) const override;
     virtual double f(const double& t1, const double& t2) const override;
     void setIntRate(const double& r);
 };
@@ -66,6 +64,8 @@ public:
     virtual double d(const double& t) const override;
     virtual double f(const double& t1, const double& t2) const override;
     void setInterpolatedObservations(std::vector<double>& times, std::vector<double>& yields);
+    std::vector<double> getTimes() const; 
+    std::vector<double> getDiscountFactors() const; 
 };
 
 #endif // TERM_STRUCTURE_H
