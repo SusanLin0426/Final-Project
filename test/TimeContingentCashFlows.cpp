@@ -83,4 +83,18 @@ double price_european_call_option_on_bond_using_ho_lee(TermStructure* initial,
     return values[0];
 }
 
+// Function to generate cash flow times and cash flows for a bond
+void generate_bond_cash_flows(double face_value, double coupon_rate, double time_to_maturity,
+    std::vector<double>& underlying_bond_cflow_times,
+    std::vector<double>& underlying_bond_cflows) {
+    int n = static_cast<int>(time_to_maturity); // Assuming annual coupon payments
+    underlying_bond_cflow_times.clear();
+    underlying_bond_cflows.clear();
 
+    for (int i = 1; i <= n; ++i) {
+        underlying_bond_cflow_times.push_back(static_cast<double>(i));
+        underlying_bond_cflows.push_back(face_value * coupon_rate);
+    }
+    // Adding the face value to the last cash flow
+    underlying_bond_cflows.back() += face_value;
+}
