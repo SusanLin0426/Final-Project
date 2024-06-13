@@ -29,11 +29,6 @@ The project consists of the following main components:
 6. **Front-end Interface**:
    - Built with React to provide an intuitive user interface for interacting with the server and visualizing results.
 
-## Environment
-
-- Ubuntu 24.04
-- React 18.3.1
-
 ### Using C++ Headers
 
 - `httplib.h` from [cpp-httplib](https://github.com/yhirose/cpp-httplib)
@@ -135,3 +130,4 @@ Example JSON payload:
 ## Conclusion
 
 This project provides a robust framework for constructing term structures and calibrating the Ho-Lee model. It leverages both C++ for high-performance calculations and Python for flexible data manipulation and visualization. The HTTP server interface and the React-based front-end make it easy to integrate with other systems and applications.
+

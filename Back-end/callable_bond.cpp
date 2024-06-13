@@ -2,7 +2,16 @@
 #include <cmath>
 #include <iostream>
 
+// source: https://github.com/yhirose/cpp-httplib
+#include "httplib.h"
+
+// source: https://github.com/nlohmann/json
+// reference: https://hackmd.io/@tico88612/cpp-json-file-tutorial?print-pdf#/
+#include "json.hpp"
+
 using namespace std;
+using namespace httplib;
+using json = nlohmann::json;
 
 vector<vector<double> > interest_rate_trees_gbm_build(const double& r0, const double& u, const double& d, const int& n) {
     vector<vector<double> > tree;
@@ -71,27 +80,56 @@ double interest_rate_trees_gbm_value_of_callable_bond(const vector<double>& cflo
     return values[0][0];
 }
 
+// CORS headers
+void setup_cors_headers(Response &res) {
+    res.set_header("Access-Control-Allow-Origin", "*");
+    res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.set_header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization");
+}
+
 int main() {
-    double r0 = 0.06;
-    double u = 1.2;
-    double d = 0.9;
-    int n = 10;
-    double q = 0.5;
 
-    vector<vector<double> > tree = interest_rate_trees_gbm_build(r0, u, d, n);
+    Server svr;
 
-    vector<double> cashflows;
-    cashflows.push_back(0);
-    for (int t = 1; t <= 9; ++t) {
-        cashflows.push_back(6);
-    }
-    cashflows.push_back(106);
+    svr.Options("/.*", [](const Request &req, Response &res) {
+        setup_cors_headers(res);
+        res.status = 200; // No content
+    });
 
-    int first_call_time = 6;
-    double call_price = 106;
+    svr.Post("/calculate", [](const Request& req, Response& res) {
 
-    cout << "Straight bond price = " << interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q) << endl;
-    cout << "Callable bond price = " << interest_rate_trees_gbm_value_of_callable_bond(cashflows, tree, q, first_call_time, call_price) << endl;
+        setup_cors_headers(res);
+
+        auto params = json::parse(req.body);
+
+        double r0 = params["r0"];
+        double u = params["u"];
+        double d = params["d"];
+        int n = params["n"];
+        double q = params["q"];
+        
+        // for callable bond price
+        int first_call_time = 6;
+        double call_price = params["call_price"];
+
+        vector<vector<double>> tree = interest_rate_trees_gbm_build(r0, u, d, n);
+
+        vector<double> cashflows;
+        cashflows.push_back(0);
+        for (int t = 1; t <= 9; ++t) {
+            cashflows.push_back(6);
+        }
+        cashflows.push_back(call_price);
+
+        json response;
+        // response["straight_bond_price"] = interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q);
+        response["callable_bond_price"] = interest_rate_trees_gbm_value_of_callable_bond(cashflows, tree, q, first_call_time, call_price);
+
+        res.set_content(response.dump(), "application/json");
+    });
+
+    cout << "Server is running at http://localhost:3002" << endl;
+    svr.listen("localhost", 3002);
 
     return 0;
 }
