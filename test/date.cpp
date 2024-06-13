@@ -119,11 +119,9 @@ bool date::is_leap_year(int year) const {
 
 date date::current_date() {
 	time_t t = time(nullptr);
-	tm now;
-	localtime_s(&now, &t);  // Use localtime_s to safely get the local time
-	return date(now.tm_mday, now.tm_mon + 1, now.tm_year + 1900);
+	tm* now = localtime(&t);
+	return date(now->tm_mday, now->tm_mon + 1, now->tm_year + 1900);
 }
-
 
 //operators overloading
 date date::operator++(int) {//postfixoperator

@@ -39,6 +39,10 @@ double price_european_call_option_on_bond_using_ho_lee(TermStructure* initial,
                                                         const std::vector<double>& underlying_bond_cflows,
                                                         const double& K, 
                                                         const double& option_time_to_maturity);
+                                                        
+void generate_bond_cash_flows(double face_value, double coupon_rate, double time_to_maturity,
+    std::vector<double>& underlying_bond_cflow_times,
+    std::vector<double>& underlying_bond_cflows);
 
 #endif // TIME_CONTINGENT_CASH_FLOWS_H
 
