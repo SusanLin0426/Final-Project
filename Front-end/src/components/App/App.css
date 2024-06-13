@@ -99,3 +99,7 @@ label {
 .delete-btn:focus {
   background-color: #e74c3c;
 }
+
+.spacing-top {
+  margin-top: 2rem; 
+}

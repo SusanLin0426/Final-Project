@@ -107,12 +107,16 @@ int main() {
         double d = params["d"];
         int n = params["n"];
         double q = params["q"];
+        double call_price = params["call_price"];
 
-        // for callable bond price
-        // int first_call_time = params["first_call_time"];
-        // double call_price = params["call_price"];
+        // 前端 input: K, maturity_date, callable_bond_information, coupon_rate, face_value, day_count_convention
+        // ZCB term structure: 1. time_to_maturity_days, 2. rate
+
+        // 如果 delta, pi 無法輸入則直接讓前端輸入
+        // 前端 output: callable_bond_price
+
+
         int first_call_time = 6;
-        double call_price = 106;
 
         vector<vector<double>> tree = interest_rate_trees_gbm_build(r0, u, d, n);
 
@@ -121,10 +125,10 @@ int main() {
         for (int t = 1; t <= 9; ++t) {
             cashflows.push_back(6);
         }
-        cashflows.push_back(106);
+        cashflows.push_back(call_price);
 
         json response;
-        response["straight_bond_price"] = interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q);
+        // response["straight_bond_price"] = interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q);
         response["callable_bond_price"] = interest_rate_trees_gbm_value_of_callable_bond(cashflows, tree, q, first_call_time, call_price);
 
         res.set_content(response.dump(), "application/json");
