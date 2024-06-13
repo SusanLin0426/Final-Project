@@ -14,42 +14,72 @@ const App = () => {
 
   useEffect(() => {
     storeData('data', state);
-    // const date = state.map(obj => obj.date);
-    const r0 = state.map(obj => obj.r0);
-    const u = state.map(obj => obj.u);
-    const d = state.map(obj => obj.d);
-    const n = state.map(obj => obj.n);
-    const q = state.map(obj => obj.q);
-    const c = state.map(obj => obj.c);
+    const k = state.map(obj => obj.k);
+    const maturity_date = state.map(obj => obj.maturity_date);
+    const delta = state.map(obj => obj.delta);
+    const pi = state.map(obj => obj.pi);
 
-    const straight_bond_price = state.map(obj => obj.straight_bond_price);
+    /* -- Callable Bond Information -- */
+    const coupon_rate = state.map(obj => obj.coupon_rate);
+    const face_value = state.map(obj => obj.face_value);
+    const day_count_convention = state.map(obj => obj.day_count_convention);
+
+    /* -- Zero Coupon Bond Term Structure -- */
+    const time_to_maturity = state.map(obj => obj.time_to_maturity);
+    const price = state.map(obj => obj.price);
+
     const callable_bond_price = state.map(obj => obj.callable_bond_price);
 
-    let newData = { r0, u, d, n, q, c, straight_bond_price, callable_bond_price };
+    let newData = { k, maturity_date, delta, pi, coupon_rate, face_value, day_count_convention, time_to_maturity, price, callable_bond_price};
     setData(newData);
   }, [state]);
 
   const handleChange = val => {
-    let r0 = parseFloat(val.r0);
-    let u = parseFloat(val.u);
-    let d = parseFloat(val.d);
-    let n = parseInt(val.n);
-    let q = parseFloat(val.q);
-    let c = parseFloat(val.c);
+    /* -- basic information -- */
+    let k = parseFloat(val.k);
+    let maturity_date = val.maturity_date;
+    let delta = parseFloat(val.delta);
+    let pi = parseFloat(val.pi);
 
+    /* -- Callable Bond Information -- */
+    let coupon_rate = parseFloat(val.coupon_rate);
+    let face_value = parseFloat(val.face_value);
+    let day_count_convention = val.day_count_convention;
+
+    /* -- Zero Coupon Bond Term Structure -- */
+    let time_to_maturity = parseFloat(val.time_to_maturity);
+    let price = parseFloat(val.price);
+
+    let callable_bond_price = parseFloat(val.callable_bond_price);
+  
     axios.post('http://localhost:3001/calculate', {
-      r0, u, d, n, q, c
+      k, 
+      maturity_date, 
+      delta, 
+      pi, 
+      coupon_rate, 
+      face_value, 
+      day_count_convention, 
+      time_to_maturity, 
+      price
     })
       .then(response => { 
       setState(prevState => {
-            val.r0 = r0;
-            val.u = u;
-            val.d = d;
-            val.n = n;
-            val.q = q;
-            val.c = c;
+        	  /* -- basic information -- */
+            val.k = k;
+            val.maturity_date = maturity_date;
+            val.delta = delta;
+            val.pi = pi;
 
-            val.straight_bond_price = response.data.straight_bond_price;
+            /* -- Callable Bond Information -- */
+            val.coupon_rate = coupon_rate;
+            val.face_value = face_value;
+            val.day_count_convention = day_count_convention;
+
+            /* -- Zero Coupon Bond Term Structure -- */
+            val.time_to_maturity = time_to_maturity;
+            val.price = price;
+
             val.callable_bond_price = response.data.callable_bond_price;
 
             val.id = uuidv4();
@@ -77,14 +107,38 @@ const App = () => {
   return (
     <div className='container'>
       <div className='row center'>
-        <h1 className='white-text'> Bond Price Calculator </h1>
+        <h2 className='white-text'> Bond Price Calculator </h2>
       </div>
+
+      <div className='row center'>
+        <h4 className='white-text'> Description </h4>
+        <h5 style={{ textAlign: 'left', color: 'white' }}>
+          We using Ho and Lee (1986) approach to build term structure trees, and using that to calculate callable bond price. 
+          The input variable are:
+        </h5>
+        <h5 style={{ textAlign: 'left', color: 'white' }}>
+               。 K: Strike Price  
+          <br/>。 Maturity Date
+          <br/>。 Delta
+          <br/>。 Pi
+          <br/>。 Callable bond information:
+          <br/><span style={{ paddingLeft: '50px' }}>Coupon Rate</span>
+          <br/><span style={{ paddingLeft: '50px' }}>Face Value</span>
+          <br/><span style={{ paddingLeft: '50px' }}>Day Count Convention (e.g. 30/360) </span>
+        </h5>
+        <h5 style={{ textAlign: 'left', color: 'white' }}>
+               。 Zero Coupon Bond Term Structure
+          <br/><span style={{ paddingLeft: '50px' }}>Time to Maturity</span>
+          <br/><span style={{ paddingLeft: '50px' }}>price </span>
+        </h5>
+      </div>      
+
       <div className='row'>
         <div className='col m12 s12'>
           <BondForm change={handleChange} />
           <div>
             <div className='row center'>
-              <h4 className='white-text'> Bond Price </h4>
+              <h4 className='white-text'> Callable Bond Price </h4>
             </div>
             <div className='data-container row'>
               {state.length > 0 ? (
@@ -94,15 +148,20 @@ const App = () => {
                       key={info.id}
                       id={info.id}
 
-                      r0={info.r0}
-                      u={info.u}
-                      d={info.d}
-                      n={info.n}
-                      q={info.q}
-                      c={info.c}
+                      k={info.k}
+                      maturity_date={info.maturity_date}
+                      delta={info.delta}
+                      pi={info.pi}
 
-                      // date={info.date}
-                      straight_bond_price={info.straight_bond_price}
+                      /* -- Callable Bond Information -- */
+                      coupon_rate={info.coupon_rate}
+                      face_value={info.face_value}
+                      day_count_convention={info.day_count_convention}
+
+                      /* -- Zero Coupon Bond Term Structure -- */
+                      time_to_maturity={info.time_to_maturity}
+                      price={info.price}
+
                       callable_bond_price={info.callable_bond_price}
                       deleteCard={handleDelete}
                     />

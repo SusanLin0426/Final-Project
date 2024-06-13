@@ -1,8 +1,7 @@
 {
-  "name": "bmical",
+  "name": "bond-price-calculator",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://GermaVinsmoke.github.io/bmi-calculator",
   "dependencies": {
     "@types/jest": "24.0.20",
     "axios": "^1.7.2",
@@ -14,6 +13,7 @@
     "react-chartjs-2": "2.8.0",
     "react-dom": "16.11.0",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.8.0",
     "uuid": "3.3.3"
   },
   "scripts": {

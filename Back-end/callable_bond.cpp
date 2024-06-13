@@ -119,10 +119,10 @@ int main() {
         for (int t = 1; t <= 9; ++t) {
             cashflows.push_back(6);
         }
-        cashflows.push_back(106);
+        cashflows.push_back(call_price);
 
         json response;
-        response["straight_bond_price"] = interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q);
+        // response["straight_bond_price"] = interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q);
         response["callable_bond_price"] = interest_rate_trees_gbm_value_of_callable_bond(cashflows, tree, q, first_call_time, call_price);
 
         res.set_content(response.dump(), "application/json");
