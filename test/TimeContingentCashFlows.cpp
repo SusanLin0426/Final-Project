@@ -56,7 +56,7 @@ double price_european_call_option_on_bond_using_ho_lee(TermStructure* initial,
         const auto& row = hl_tree[i];
         for (size_t j = 0; j < row.size(); ++j) { // statue j
             const auto& node = row[j];
-            std::cout << "Discount factor at row " << i << " node " << j << " is " << node.d(1.0) << std::endl;
+            // std::cout << "Discount factor at row " << i << " node " << j << " is " << node.d(1.0) << std::endl;
         }
     }
 
