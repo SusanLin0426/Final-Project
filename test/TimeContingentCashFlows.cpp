@@ -61,20 +61,21 @@ double price_european_call_option_on_bond_using_ho_lee(TermStructure* initial,
     }
 
     // Print vec_cf and T for debugging
-    // std::cout << "T: " << T << std::endl;
-    // std::cout << "vec_cf:" << std::endl;
-    // for (const auto& cf : vec_cf) {
-    //     cf.print();
-    // }
+    std::cout << "T: " << T << std::endl;
+    std::cout << "vec_cf:" << std::endl;
+    for (const auto& cf : vec_cf) {
+        cf.print();
+    }
 
-    // std::cout << "vec_cf.sizez():" << vec_cf.size() << std::endl;
-    // std::cout << "underlying_bond_cflows.sizez():" << underlying_bond_cflows.size() << std::endl;
+    std::cout << "vec_cf.sizez():" << vec_cf.size() << std::endl;
+    std::cout << "underlying_bond_cflows.sizez():" << underlying_bond_cflows.size() << std::endl;
 
     std::vector<double> values(T + 1, 0.0);
     for (int i = 0; i <= T; ++i) {
+        std::cout << "bonds price: " << bonds_price(vec_cf[T].times, vec_cf[T].cash_flows, hl_tree[T][i]) << std::endl;
         values[i] = std::max(0.0, bonds_price(vec_cf[T].times, vec_cf[T].cash_flows, hl_tree[T][i]) - K); // Call payoffs at maturity
-        // std::cout << "check i :" << i << std::endl;
-        // std::cout << "values[i] :" << values[i] << std::endl;
+        std::cout << "check i :" << i << std::endl;
+        std::cout << "values[i] :" << values[i] << std::endl;
     }
 
     for (int t = T - 1; t >= 0; --t) {

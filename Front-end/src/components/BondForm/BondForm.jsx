@@ -6,18 +6,16 @@ import Select from 'react-select';
 
 const initialValues = {
 	/* -- basic information -- */
-    k: '',
-	maturity_date: '',
-	delta: '',
-	pi: '',
+    k: '10.00',
+	maturity_date: '2030-05-31',
+	delta: '0.98',
+	pi: '0.50',
 
 	/* -- Callable Bond Information -- */
-	coupon_rate: '',
-	face_value: '',
-	day_count_convention:'', // Using an object for the select component
+	coupon_rate: '0.10',
+	face_value: '50.00',
+	day_count_convention:'0', 
 
-	/* -- Zero Coupon Bond Term Structure -- */
-	upload_file: ''
 }
 
 const BondForm = ({ change }) => {
@@ -53,39 +51,44 @@ const BondForm = ({ change }) => {
         setState(prev => ({ ...prev, day_count_convention: selectedOption }));
     };
 
-	const handleSubmit = async () => {
-		const formData = new FormData();
-		
-		// Append file to FormData if present
-		if (state.upload_file) {
-			formData.append('upload_file', state.upload_file);
-		}
-	
-		// Append other form data as JSON
-		const json = JSON.stringify({
-			k: state.k,
-			maturity_date: state.maturity_date,
-			delta: state.delta,
-			pi: state.pi,
-			coupon_rate: state.coupon_rate,
-			face_value: state.face_value,
-			day_count_convention: state.day_count_convention
-		});
-		formData.append('json', new Blob([json], {
-			type: 'application/json'
-		}));
-	
-		try {
-			const response = await axios.post('http://localhost:3001/submit', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			});
-			console.log('Submission successful', response.data);
-		} catch (error) {
-			console.error('Error submitting form:', error);
-		}
+	const handleSubmit = () => {
+		change(state);
+		setState(initialValues);
 	};
+
+	// const handleSubmit = async () => {
+	// 	const formData = new FormData();
+		
+	// 	// Append file to FormData if present
+	// 	if (state.upload_file) {
+	// 		formData.append('upload_file', state.upload_file);
+	// 	}
+	
+	// 	// Append other form data as JSON
+	// 	const json = JSON.stringify({
+	// 		k: state.k,
+	// 		maturity_date: state.maturity_date,
+	// 		delta: state.delta,
+	// 		pi: state.pi,
+	// 		coupon_rate: state.coupon_rate,
+	// 		face_value: state.face_value,
+	// 		day_count_convention: state.day_count_convention
+	// 	});
+	// 	formData.append('json', new Blob([json], {
+	// 		type: 'application/json'
+	// 	}));
+	
+	// 	try {
+	// 		const response = await axios.post('http://localhost:3001/calculate', formData, {
+	// 			headers: {
+	// 				'Content-Type': 'multipart/form-data'
+	// 			}
+	// 		});
+	// 		console.log('Submission successful', response.data);
+	// 	} catch (error) {
+	// 		console.error('Error submitting form:', error);
+	// 	}
+	// };
 	
 	return (
 		<>
@@ -120,7 +123,6 @@ const BondForm = ({ change }) => {
 					/>
 				</div>
 
-
 				<div className="center col s3">
 					<label htmlFor="delta"> Delta </label>
 					<input
@@ -128,10 +130,11 @@ const BondForm = ({ change }) => {
 						name="delta"
 						type="number"
 						min="0.00"
-						max="1.00"
+						max="100.00"
 						step="0.01"
-						placeholder="0.90"
+						placeholder="0.98"
 						value={state.delta}
+
 						onChange={handleChange}
 					/>
 				</div>
@@ -143,7 +146,7 @@ const BondForm = ({ change }) => {
 						name="pi"
 						type="number"
 						min="0"
-						max="1.00"
+						max="100.00"
 						placeholder="0.50"
 						value={state.pi}
 						onChange={handleChange}
@@ -164,7 +167,7 @@ const BondForm = ({ change }) => {
 						min="0"
 						max="1.00"
 						step="0.01"
-						placeholder="0.50"
+						placeholder="0.10"
 						value={state.coupon_rate}
 						onChange={handleChange}
 					/>
@@ -194,21 +197,6 @@ const BondForm = ({ change }) => {
 						options={dayCountOptions}
 					/>
 				</div>
-
-				<br/><br/><br/><br/>
-				<div className="row center">
-                <h4 className='white-text'>Zero Coupon Bond Term Structure</h4>
-				<h5 className='white-text'>Upload .csv File </h5>
-					<form>
-					<input
-						type="file"
-						id="upload_file"
-						name="upload_file"
-						onChange={handleChange}
-					/>
-					</form>
-				</div>
-
 			</div>
 			
 			<div className="center">
@@ -216,13 +204,13 @@ const BondForm = ({ change }) => {
 					id="bond-btn"
 					className="calculate-btn"
 					type="button"
-					disabled={state.k  === '' || 
+					disabled={state.k  === '' } //|| 
 							  //state.maturity_date === '' || 
 							  //state.delta === '' || 
 							  //state.pi === '' || 
 							  //state.coupon_rate === '' || 
 							  //state.face_value === '' || 
-							  state.day_count_convention === ''}
+							  // state.day_count_convention === ''}
 					onClick={handleSubmit}
 				>
 					Calculate Bond Price

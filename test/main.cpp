@@ -3,10 +3,15 @@
 #include <sstream>
 #include <vector>
 #include <string>
-#include "TermStructure.h"
-#include "TermStructureHoLee.h"
-#include "TimeContingentCashFlows.h"
+
 #include "date.h"
+#include "date.cpp"
+#include "TermStructure.h"
+#include "TermStructure.cpp"
+#include "TermStructureHoLee.h"
+#include "TermStructureHoLee.cpp"
+#include "TimeContingentCashFlows.h"
+#include "TimeContingentCashFlows.cpp"
 
 // source: https://github.com/yhirose/cpp-httplib
 #include "httplib.h"
@@ -71,32 +76,70 @@ int main() {
         setup_cors_headers(res);
         res.status = 200; // No content
     });
+    
+    // svr.Post("/sumbit", [](const Request& req, Response& res) {
+    //     setup_cors_headers(res);
+
+    //     auto params = json::parse(req.body);
+
+    //     // Check if it's a multipart/form-data
+    //     if (req.has_file("json")) {
+    //         const auto& file = req.get_file_value("json");
+
+    //         // Assuming file.content contains the JSON data
+    //         json params = json::parse(file.content);
+            
+    //     } 
+    //     else {
+    //         res.status = 400;
+    //         res.set_content("JSON file part 'json' not found in the request.", "text/plain");
+    //     }
+    // });
 
     svr.Post("/calculate", [](const Request& req, Response& res) {
-
         setup_cors_headers(res);
 
         auto params = json::parse(req.body);
 
+        // get json data fron front-end
+        double K = params["k"];
+        string maturity_date = params["maturity_date"];
+
+        double delta = params["delta"];
+        double pi = params["pi"];
+        double coupon_rate = params["coupon_rate"];
+        double face_value = params["face_value"];
+        int dcc_case = stoi(params["day_count_convention"]["value"].get<string>());
+
+        // split maturity date
+        int eYear, eMonth, eDay;
+        sscanf(maturity_date.c_str(), "%d-%d-%d", &eYear, &eMonth, &eDay);
+
+        // check values
+        cout << "K: " << K << endl;
+        cout << "maturity_date: " << maturity_date << endl;
+        cout << "eYear: " << eYear << endl;
+        cout << "eMonth: " << eMonth << endl;
+        cout << "eDay: " << eDay << endl;
+        cout << "delta: " << delta << endl;
+        cout << "pi: " << pi << endl;
+        cout << "coupon_rate: " << coupon_rate << endl;
+        cout << "face_value: " << face_value << endl;
+        cout << "day_count_convention: " << dcc_case << endl;
+
         vector<double> times_;
         vector<double> yields_;
-
+        
+        // upload_file
         // Read data from CSV
         readCSV("maturity_days_and_rates.csv", times_, yields_);
 
         // cubic term structure
-        TermStructure* initial = new TermStructureInterpolated();
-        double delta = 0.98;
-        double pi = 0.5;
-        double r = 0.1;
+        // TermStructure* initial = new TermStructureInterpolated();
 
-        // input: K, maturity_date, callable_bond_information, coupon_rate, face_value, day_count_convention
+        TermStructureInterpolated *initial = new TermStructureInterpolated(times_, yields_);
         
-        
-        // maturity_date calculation
-        int sYear = 2077, sMonth = 7, sDay = 7;//should be imputed by user or determined by the system
         date startingDate = date::current_date();
-        int eYear = 2077, eMonth = 8, eDay = 8;//should be imputed by user
         date expirationDate(eDay, eMonth, eYear);
 
         if (!startingDate.valid() || !expirationDate.valid()) {
@@ -105,8 +148,6 @@ int main() {
         }
 
         // Determine the day count convention based on combox selection
-
-        int dcc_case = 0;
         DayCountConvention dcc;
 
         switch (dcc_case) {//should be imputed by dropdown list
@@ -119,12 +160,16 @@ int main() {
                 //error message "Invalid day count convention selected");
                 return 1;
         }
+        
         // Calculate the time to maturity using years_until method
         double timeToMaturity = startingDate.years_until(expirationDate, dcc);
 
+        cout << "timeToMaturity: " << timeToMaturity << endl;
         //callable_bond_information
         //Enter face value of the bond, Enter coupon rate of the bond (as a decimal), Enter time to maturity of the bond (in years)
-        double face_value = 100, coupon_rate = 0.05, time_to_maturity = 10;
+        //double face_value = 100, coupon_rate = 0.05, 
+        
+        double time_to_maturity = 10;
         vector<double> underlying_bond_cflow_times;
         vector<double> underlying_bond_cflows;
         generate_bond_cash_flows(face_value, coupon_rate, time_to_maturity, underlying_bond_cflow_times, underlying_bond_cflows);
@@ -133,40 +178,28 @@ int main() {
         times.push_back(5.0);
         vector<double> cflows;
         cflows.push_back(100);
-        double K = 80;
-        // double time_to_maturity = 3;
-
-        vector<double> market_times;
-        market_times.push_back(1.0);
-        market_times.push_back(2.0);
-        market_times.push_back(3.0);
-        market_times.push_back(4.0);
-        market_times.push_back(5.0);
-
-        vector<double> market_prices;
-        market_prices.push_back(0.95);
-        market_prices.push_back(0.90);
-        market_prices.push_back(0.85);
-        market_prices.push_back(0.80);
-        market_prices.push_back(0.75);
-
-
-        // cout << "cubic term structure" << endl;
-        cout << price_european_call_option_on_bond_using_ho_lee(initial, 
-                                                                delta, 
-                                                                pi, 
-                                                                underlying_bond_cflow_times, 
-                                                                underlying_bond_cflows, 
-                                                                K, 
-                                                                timeToMaturity) << endl;
-        // cout << endl;
-
-        delete initial;
 
         json response;
-        // response["straight_bond_price"] = interest_rate_trees_gbm_value_of_cashflows(cashflows, tree, q);
-        response["callable_bond_price"] = "";
 
+        vector<double> getTime = initial->getTimes();
+        vector<double> getDiscountFactor = initial->getDiscountFactors();
+
+        double callable_bond_price = price_european_call_option_on_bond_using_ho_lee(initial,
+                                                                                    delta, 
+                                                                                    pi, 
+                                                                                    underlying_bond_cflow_times,
+                                                                                    underlying_bond_cflows, 
+                                                                                    K, 
+                                                                                    timeToMaturity,
+                                                                                    getTime,
+                                                                                    getDiscountFactor);
+
+        // test
+        cout << "callable bond price: " << callable_bond_price << endl;
+
+        response["callable_bond_price"] = callable_bond_price;
+        
+        delete initial;
         res.set_content(response.dump(), "application/json");
     });
 

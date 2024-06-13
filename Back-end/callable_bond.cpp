@@ -128,8 +128,8 @@ int main() {
         res.set_content(response.dump(), "application/json");
     });
 
-    cout << "Server is running at http://localhost:3001" << endl;
-    svr.listen("localhost", 3001);
+    cout << "Server is running at http://localhost:3002" << endl;
+    svr.listen("localhost", 3002);
 
     return 0;
 }
