@@ -107,16 +107,10 @@ int main() {
         double d = params["d"];
         int n = params["n"];
         double q = params["q"];
-        double call_price = params["call_price"];
-
-        // 前端 input: K, maturity_date, callable_bond_information, coupon_rate, face_value, day_count_convention
-        // ZCB term structure: 1. time_to_maturity_days, 2. rate
-
-        // 如果 delta, pi 無法輸入則直接讓前端輸入
-        // 前端 output: callable_bond_price
-
-
+        
+        // for callable bond price
         int first_call_time = 6;
+        double call_price = params["call_price"];
 
         vector<vector<double>> tree = interest_rate_trees_gbm_build(r0, u, d, n);
 
